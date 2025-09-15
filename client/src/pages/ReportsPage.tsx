@@ -15,13 +15,13 @@ export default function ReportsPage() {
       weekStart: "12/9",
       weekEnd: "12/15",
       moodData: [
-        { day: "月", mood: 6, date: "12/9" },
-        { day: "火", mood: 7, date: "12/10" },
-        { day: "水", mood: 5, date: "12/11" },
-        { day: "木", mood: 8, date: "12/12" },
-        { day: "金", mood: 7, date: "12/13" },
-        { day: "土", mood: 8, date: "12/14" },
-        { day: "日", mood: 6, date: "12/15" }
+        { day: "月", mood: "少し疲れていた", date: "12/9" },
+        { day: "火", mood: "穏やかな気持ち", date: "12/10" },
+        { day: "水", mood: "不安を感じていた", date: "12/11" },
+        { day: "木", mood: "充実していた", date: "12/12" },
+        { day: "金", mood: "ほっとしていた", date: "12/13" },
+        { day: "土", mood: "嬉しい気持ち", date: "12/14" },
+        { day: "日", mood: "落ち着いていた", date: "12/15" }
       ],
       progressData: [
         { day: "月", progress: 20, taskCompleted: 2 },
@@ -33,10 +33,11 @@ export default function ReportsPage() {
         { day: "日", progress: 85, taskCompleted: 0 }
       ],
       summary: {
-        averageMood: 6.7,
+        moodDescription: "だんだん心が軽やかに",
         totalTasksCompleted: 12,
         mostActiveDay: "木曜日",
-        improvementTrend: "up" as const
+        improvementTrend: "up" as const,
+        weeklyMessage: "この1週間、いろいろな気持ちを感じながらも、少しずつ前に進んでこられましたね"
       }
     },
     {
@@ -45,13 +46,13 @@ export default function ReportsPage() {
       weekStart: "12/2",
       weekEnd: "12/8",
       moodData: [
-        { day: "月", mood: 5, date: "12/2" },
-        { day: "火", mood: 6, date: "12/3" },
-        { day: "水", mood: 6, date: "12/4" },
-        { day: "木", mood: 7, date: "12/5" },
-        { day: "金", mood: 6, date: "12/6" },
-        { day: "土", mood: 7, date: "12/7" },
-        { day: "日", mood: 5, date: "12/8" }
+        { day: "月", mood: "少し重い気持ち", date: "12/2" },
+        { day: "火", mood: "穏やかだった", date: "12/3" },
+        { day: "水", mood: "安心していた", date: "12/4" },
+        { day: "木", mood: "充実していた", date: "12/5" },
+        { day: "金", mood: "落ち着いていた", date: "12/6" },
+        { day: "土", mood: "嬉しかった", date: "12/7" },
+        { day: "日", mood: "静かだった", date: "12/8" }
       ],
       progressData: [
         { day: "月", progress: 10, taskCompleted: 1 },
@@ -63,10 +64,11 @@ export default function ReportsPage() {
         { day: "日", progress: 65, taskCompleted: 0 }
       ],
       summary: {
-        averageMood: 6.0,
+        moodDescription: "安定した日々",
         totalTasksCompleted: 11,
         mostActiveDay: "木曜日",
-        improvementTrend: "stable" as const
+        improvementTrend: "stable" as const,
+        weeklyMessage: "穏やかな一週間でしたね。このペースを大切にしてください"
       }
     },
     {
@@ -75,13 +77,13 @@ export default function ReportsPage() {
       weekStart: "11/25",
       weekEnd: "12/1",
       moodData: [
-        { day: "月", mood: 4, date: "11/25" },
-        { day: "火", mood: 5, date: "11/26" },
-        { day: "水", mood: 4, date: "11/27" },
-        { day: "木", mood: 6, date: "11/28" },
-        { day: "金", mood: 5, date: "11/29" },
-        { day: "土", mood: 6, date: "11/30" },
-        { day: "日", mood: 4, date: "12/1" }
+        { day: "月", mood: "重い気持ち", date: "11/25" },
+        { day: "火", mood: "少し疲いていた", date: "11/26" },
+        { day: "水", mood: "不安だった", date: "11/27" },
+        { day: "木", mood: "少し明るくなった", date: "11/28" },
+        { day: "金", mood: "ほっとした", date: "11/29" },
+        { day: "土", mood: "温かい気持ち", date: "11/30" },
+        { day: "日", mood: "静かに頑張った", date: "12/1" }
       ],
       progressData: [
         { day: "月", progress: 5, taskCompleted: 1 },
@@ -93,10 +95,11 @@ export default function ReportsPage() {
         { day: "日", progress: 40, taskCompleted: 0 }
       ],
       summary: {
-        averageMood: 4.9,
+        moodDescription: "少し重い日々",
         totalTasksCompleted: 8,
         mostActiveDay: "木曜日",
-        improvementTrend: "down" as const
+        improvementTrend: "down" as const,
+        weeklyMessage: "大変な時期だったと思います。よく頑張られました"
       }
     }
   ];
@@ -156,35 +159,26 @@ export default function ReportsPage() {
           </CardContent>
         </Card>
 
-        {/* 比較インサイト */}
-        {selectedWeek !== "current" && (
-          <Card className="mb-6" data-testid="card-comparison">
+        {/* 振り返りのメッセージ */}
+        {selectedWeek !== "current" && selectedReport && (
+          <Card className="mb-6" data-testid="card-reflection">
             <CardHeader>
-              <CardTitle className="text-base">今週との比較</CardTitle>
+              <CardTitle className="text-base">この週の振り返り</CardTitle>
             </CardHeader>
             <CardContent>
-              {(() => {
-                const currentReport = mockWeeklyReports[0];
-                const moodChange = currentReport.summary.averageMood - (selectedReport?.summary.averageMood || 0);
-                const taskChange = currentReport.summary.totalTasksCompleted - (selectedReport?.summary.totalTasksCompleted || 0);
-                
-                return (
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">気分の変化:</span>
-                      <span className={`font-medium ${moodChange > 0 ? 'text-chart-2' : moodChange < 0 ? 'text-chart-3' : 'text-muted-foreground'}`}>
-                        {moodChange > 0 ? '+' : ''}{moodChange.toFixed(1)}ポイント
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">タスク完了数の変化:</span>
-                      <span className={`font-medium ${taskChange > 0 ? 'text-chart-2' : taskChange < 0 ? 'text-chart-3' : 'text-muted-foreground'}`}>
-                        {taskChange > 0 ? '+' : ''}{taskChange}個
-                      </span>
-                    </div>
-                  </div>
-                );
-              })()}
+              <div className="space-y-3 text-sm">
+                <div className="p-3 bg-chart-2/10 rounded-lg">
+                  <p className="text-card-foreground">
+                    {selectedReport.summary.weeklyMessage}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">この週に達成できたこと:</span>
+                  <span className="font-medium text-chart-1">
+                    {selectedReport.summary.totalTasksCompleted}つ
+                  </span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}

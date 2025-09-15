@@ -68,31 +68,40 @@ export default function WorryCard({ worry, onViewDetails, onStartChat }: WorryCa
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {/* 進捗表示 */}
+        {/* 取り組みの軌跡 */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">全体の進捗</span>
-            <span className="font-medium text-card-foreground" data-testid={`text-progress-${worry.id}`}>
-              {worry.progress}%
+            <span className="text-muted-foreground">あなたの歩み</span>
+            <span className="font-medium text-chart-2" data-testid={`text-progress-${worry.id}`}>
+              よく頑張っています
             </span>
           </div>
-          <Progress value={worry.progress} className="h-2" data-testid={`progress-bar-${worry.id}`} />
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-chart-2 to-chart-1 rounded-full transition-all duration-300"
+              style={{ width: `${worry.progress}%` }}
+              data-testid={`progress-bar-${worry.id}`}
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            小さな一歩一歩が大切な成長です
+          </p>
         </div>
 
-        {/* 統計情報 */}
+        {/* あなたの取り組み */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
             <Target className="w-4 h-4 text-chart-2" />
-            <span className="text-muted-foreground">目標:</span>
-            <span className="font-medium text-card-foreground" data-testid={`text-goal-count-${worry.id}`}>
-              {worry.goalCount}個
+            <span className="text-muted-foreground">描いた目標</span>
+            <span className="font-medium text-chart-2" data-testid={`text-goal-count-${worry.id}`}>
+              {worry.goalCount}つ
             </span>
           </div>
           <div className="flex items-center gap-2">
             <CheckSquare className="w-4 h-4 text-chart-1" />
-            <span className="text-muted-foreground">タスク:</span>
-            <span className="font-medium text-card-foreground" data-testid={`text-task-count-${worry.id}`}>
-              {worry.completedTasks}/{worry.taskCount}
+            <span className="text-muted-foreground">達成できたこと</span>
+            <span className="font-medium text-chart-1" data-testid={`text-task-count-${worry.id}`}>
+              {worry.completedTasks}つ
             </span>
           </div>
         </div>
@@ -100,11 +109,11 @@ export default function WorryCard({ worry, onViewDetails, onStartChat }: WorryCa
         {/* 最後の活動 */}
         {worry.lastActivity && (
           <div className="text-xs text-muted-foreground" data-testid={`text-last-activity-${worry.id}`}>
-            最終更新: {worry.lastActivity}
+            {worry.lastActivity}に一緒に向き合いました
           </div>
         )}
 
-        {/* アクションボタン */}
+        {/* 寄り添いのアクション */}
         <div className="flex gap-2 pt-2">
           <Button 
             variant="outline" 
@@ -114,7 +123,7 @@ export default function WorryCard({ worry, onViewDetails, onStartChat }: WorryCa
             data-testid={`button-view-details-${worry.id}`}
           >
             <Heart className="w-4 h-4 mr-2" />
-            詳細を見る
+            振り返る
           </Button>
           <Button 
             size="sm" 
@@ -123,7 +132,7 @@ export default function WorryCard({ worry, onViewDetails, onStartChat }: WorryCa
             data-testid={`button-start-chat-${worry.id}`}
           >
             <MessageSquare className="w-4 h-4 mr-2" />
-            相談する
+            お話しする
           </Button>
         </div>
       </CardContent>

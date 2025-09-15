@@ -5,13 +5,13 @@ export default function WeeklyReportChartExample() {
     weekStart: "12/9",
     weekEnd: "12/15",
     moodData: [
-      { day: "月", mood: 6, date: "12/9" },
-      { day: "火", mood: 7, date: "12/10" },
-      { day: "水", mood: 5, date: "12/11" },
-      { day: "木", mood: 8, date: "12/12" },
-      { day: "金", mood: 7, date: "12/13" },
-      { day: "土", mood: 8, date: "12/14" },
-      { day: "日", mood: 6, date: "12/15" }
+      { day: "月", mood: "少し疲れていた", date: "12/9" },
+      { day: "火", mood: "穏やかな気持ち", date: "12/10" },
+      { day: "水", mood: "不安を感じていた", date: "12/11" },
+      { day: "木", mood: "充実していた", date: "12/12" },
+      { day: "金", mood: "ほっとしていた", date: "12/13" },
+      { day: "土", mood: "嬉しい気持ち", date: "12/14" },
+      { day: "日", mood: "落ち着いていた", date: "12/15" }
     ],
     progressData: [
       { day: "月", progress: 20, taskCompleted: 2 },
@@ -23,10 +23,11 @@ export default function WeeklyReportChartExample() {
       { day: "日", progress: 85, taskCompleted: 0 }
     ],
     summary: {
-      averageMood: 6.7,
+      moodDescription: "だんだん心が軽やかに",
       totalTasksCompleted: 12,
       mostActiveDay: "木曜日",
-      improvementTrend: "up" as const
+      improvementTrend: "up" as const,
+      weeklyMessage: "この1週間、いろいろな気持ちを感じながらも、少しずつ前に進んでこられましたね"
     }
   };
 

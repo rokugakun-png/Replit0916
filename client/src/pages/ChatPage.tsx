@@ -31,23 +31,23 @@ export default function ChatPage() {
   const mockCharacters = [
     {
       id: "1",
-      name: "田中先生",
+      name: "さくら先生",
       role: "doctor",
-      personality: "優しく穏やかな性格で、患者の話をじっくりと聞いてくれる経験豊富な医師。心理的なサポートにも長けています。",
+      personality: "どんなときでもあなたの味方。ゆっくりお話を聞かせてください。一緒に考えていきましょう。",
       avatar: ""
     },
     {
       id: "2",
-      name: "佐藤カウンセラー",
+      name: "ひろかさん",
       role: "therapist",
-      personality: "共感力が高く、相談者の気持ちに寄り添いながら適切なアドバイスを提供するプロのセラピスト。",
+      personality: "あなたの気持ちをそのまま受け止めます。無理をしなくても大丈夫。安心してお話しください。",
       avatar: ""
     },
     {
       id: "3",
-      name: "山田コンサル",
+      name: "けんじさん",
       role: "consultant",
-      personality: "論理的で実践的なアプローチを得意とし、具体的な解決策や行動計画を一緒に考えてくれる頼れる相談相手。",
+      personality: "一緒に小さな一歩を見つけましょう。答えはもうあなたの中にあります。それを一緒に見つけていきませんか？",
       avatar: ""
     }
   ];
@@ -56,10 +56,10 @@ export default function ChatPage() {
   const mockInitialMessages = [
     {
       id: "1",
-      content: "こんにちは！仕事でのコミュニケーションについてご相談されたいとのことですね。まずは、どのような状況で困ることが多いか教えていただけますか？",
+      content: "お疲れ様です。今日もここに来てくださってありがとうございます。\n\nどんなことでも、心にあることを自由にお話しください。急がなくても大丈夫です。あなたのペースで、聞かせてくださいね。",
       isFromUser: false,
       timestamp: "14:30",
-      characterName: "田中先生",
+      characterName: "さくら先生",
       characterRole: "doctor",
       characterAvatar: ""
     }
@@ -91,7 +91,7 @@ export default function ChatPage() {
     setTimeout(() => {
       const aiResponse = {
         id: (Date.now() + 1).toString(),
-        content: `${content}についてのご相談ありがとうございます。\n\nそのような状況でお困りなのですね。よく理解できます。具体的にどのような場面で特に難しさを感じられるでしょうか？\n\n詳しくお聞かせいただければ、より適切なアドバイスをさせていただけると思います。`,
+        content: `お話しくださってありがとうございます。\n\n${content}のことで心を悩ませていらっしゃるんですね。そのお気持ち、とてもよくわかります。\n\n一人で抱え込まずに、こうして話してくださったことがとても大切な一歩だと思います。もしよろしければ、その時のお気持ちや、どんなことを感じていらっしゃるか、お聞かせいただけませんか？\n\n急がなくても大丈夫です。あなたのペースで。`,
         isFromUser: false,
         timestamp: new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
         characterName: selectedCharacter?.name,

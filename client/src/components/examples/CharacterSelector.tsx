@@ -7,23 +7,23 @@ export default function CharacterSelectorExample() {
   const mockCharacters = [
     {
       id: "1",
-      name: "田中先生",
+      name: "さくら先生",
       role: "doctor",
-      personality: "優しく穏やかな性格で、患者の話をじっくりと聞いてくれる経験豊富な医師。心理的なサポートにも長けています。",
+      personality: "どんなときでもあなたの味方。ゆっくりお話を聞かせてください。一緒に考えていきましょう。",
       avatar: ""
     },
     {
       id: "2",
-      name: "佐藤カウンセラー",
+      name: "ひろかさん",
       role: "therapist",
-      personality: "共感力が高く、相談者の気持ちに寄り添いながら適切なアドバイスを提供するプロのセラピスト。",
+      personality: "あなたの気持ちをそのまま受け止めます。無理をしなくても大丈夫。安心してお話しください。",
       avatar: ""
     },
     {
       id: "3",
-      name: "山田コンサル",
+      name: "けんじさん",
       role: "consultant",
-      personality: "論理的で実践的なアプローチを得意とし、具体的な解決策や行動計画を一緒に考えてくれる頼れる相談相手。",
+      personality: "一緒に小さな一歩を見つけましょう。答えはもうあなたの中にあります。それを一緒に見つけていきませんか？",
       avatar: ""
     }
   ];

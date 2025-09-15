@@ -94,30 +94,38 @@ export default function HomePage() {
 
       {/* メインコンテンツ */}
       <div className="max-w-md mx-auto px-4 py-6">
-        {/* 概要カード */}
+        {/* 今週のあなた */}
         <Card className="mb-6" data-testid="card-overview">
           <CardHeader>
-            <CardTitle className="text-base">今週の概要</CardTitle>
+            <CardTitle className="text-base">今週のあなた</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-chart-2" data-testid="text-active-worries">
-                  {mockWorries.filter(w => w.status === 'active').length}
+            <div className="space-y-4">
+              <div className="text-center">
+                <div className="text-lg font-medium text-foreground mb-2">
+                  今週もお疲れ様でした
                 </div>
-                <div className="text-sm text-muted-foreground">進行中</div>
+                <p className="text-sm text-muted-foreground">
+                  {mockWorries.filter(w => w.status === 'active').length > 0 
+                    ? `${mockWorries.filter(w => w.status === 'active').length}つの悩みと向き合っていますね`
+                    : '今は落ち着いて過ごされているようですね'
+                  }
+                </p>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-chart-1" data-testid="text-completed-tasks">
-                  {mockWorries.reduce((acc, w) => acc + w.completedTasks, 0)}
+              
+              {mockWorries.reduce((acc, w) => acc + w.completedTasks, 0) > 0 && (
+                <div className="flex items-center justify-center gap-2 p-3 bg-chart-1/10 rounded-lg">
+                  <div className="w-2 h-2 bg-chart-1 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-chart-1 font-medium">
+                    {mockWorries.reduce((acc, w) => acc + w.completedTasks, 0)}つのことを達成できました
+                  </span>
                 </div>
-                <div className="text-sm text-muted-foreground">完了タスク</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-primary" data-testid="text-average-progress">
-                  {Math.round(mockWorries.reduce((acc, w) => acc + w.progress, 0) / mockWorries.length)}%
-                </div>
-                <div className="text-sm text-muted-foreground">平均進捗</div>
+              )}
+              
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">
+                  どんな小さな一歩でも、あなたの成長です
+                </p>
               </div>
             </div>
           </CardContent>
