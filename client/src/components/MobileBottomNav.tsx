@@ -1,18 +1,23 @@
 import { Home, MessageSquare, BarChart3, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
 
 interface MobileBottomNavProps {
   activeTab: string;
-  onTabChange: (tab: string) => void;
 }
 
-export default function MobileBottomNav({ activeTab, onTabChange }: MobileBottomNavProps) {
+export default function MobileBottomNav({ activeTab }: MobileBottomNavProps) {
+  const [, setLocation] = useLocation();
   const tabs = [
-    { id: "home", label: "ホーム", icon: Home },
-    { id: "chat", label: "相談", icon: MessageSquare },
-    { id: "reports", label: "レポート", icon: BarChart3 },
-    { id: "settings", label: "設定", icon: Settings }
+    { id: "home", label: "ホーム", icon: Home, path: "/" },
+    { id: "chat", label: "相談", icon: MessageSquare, path: "/characters" },
+    { id: "reports", label: "レポート", icon: BarChart3, path: "/reports" },
+    { id: "settings", label: "設定", icon: Settings, path: "/settings" }
   ];
+
+  const handleTabClick = (tab: typeof tabs[0]) => {
+    setLocation(tab.path);
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-2 py-2 z-50">
@@ -31,7 +36,7 @@ export default function MobileBottomNav({ activeTab, onTabChange }: MobileBottom
                   ? 'text-primary' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => handleTabClick(tab)}
               data-testid={`button-nav-${tab.id}`}
             >
               <Icon className={`w-5 h-5 ${isActive ? 'text-primary' : ''}`} />

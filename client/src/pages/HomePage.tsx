@@ -4,9 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import WorryCard from "@/components/WorryCard";
+import { useLocation } from "wouter";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [, setLocation] = useLocation();
   
   // todo: remove mock functionality
   const mockWorries = [
@@ -55,7 +57,8 @@ export default function HomePage() {
   };
 
   const handleStartChat = (id: string) => {
-    console.log('Start chat for worry:', id);
+    // デフォルトでさくら先生との個別チャットルームに直接遷移
+    setLocation(`/chat/sakura/${id}`);
   };
 
   const handleAddWorry = () => {
