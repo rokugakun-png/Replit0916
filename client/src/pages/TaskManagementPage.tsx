@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,8 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Target, Plus, CheckCircle, Calendar, Star } from "lucide-react";
+import { ArrowLeft, Target, Plus, CheckCircle, Calendar, Star, Brain, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Task {
   id: string;
@@ -36,6 +38,20 @@ interface Achievement {
   category: "task" | "goal" | "personal";
 }
 
+interface AITaskSuggestion {
+  title: string;
+  description: string;
+  priority: "low" | "medium" | "high";
+  reasoning: string;
+  category: "communication" | "self-care" | "goal-setting" | "behavioral" | "emotional";
+}
+
+interface ChatMessage {
+  sender: "user" | "character";
+  content: string;
+  timestamp: string;
+}
+
 interface TaskManagementPageProps {
   worryId: string;
 }
@@ -61,6 +77,10 @@ export default function TaskManagementPage({ worryId }: TaskManagementPageProps)
   // 今日の達成記録フォーム
   const [newAchievement, setNewAchievement] = useState("");
 
+  // AI提案関連
+  const [aiSuggestions, setAiSuggestions] = useState<AITaskSuggestion[]>([]);
+  const [isAnalyzingChat, setIsAnalyzingChat] = useState(false);
+
   // モックデータ
   const worries: Record<string, { title: string }> = {
     "1": { title: "仕事でのコミュニケーション改善" },
@@ -69,6 +89,31 @@ export default function TaskManagementPage({ worryId }: TaskManagementPageProps)
   };
 
   const worry = worries[worryId] || worries["1"];
+
+  // AI提案のためのmutation
+  const aiSuggestionMutation = useMutation({
+    mutationFn: async (params: { messages: ChatMessage[], worryTitle: string, characterName: string }) => {
+      const response = await apiRequest("POST", "/api/suggest-tasks", params);
+      return await response.json();
+    },
+    onSuccess: (data: { suggestions: AITaskSuggestion[] }) => {
+      setAiSuggestions(data.suggestions || []);
+      setIsAnalyzingChat(false);
+      toast({
+        title: "AI提案が完了しました",
+        description: `${data.suggestions?.length || 0}件のタスクが提案されました。`
+      });
+    },
+    onError: (error) => {
+      setIsAnalyzingChat(false);
+      console.error("AI suggestion error:", error);
+      toast({
+        title: "AI提案でエラーが発生しました",
+        description: "しばらく後にもう一度お試しください。",
+        variant: "destructive"
+      });
+    }
+  });
 
   // モック目標データ
   const [goals] = useState<Goal[]>([
@@ -156,6 +201,60 @@ export default function TaskManagementPage({ worryId }: TaskManagementPageProps)
         description: "素晴らしい取り組みですね。"
       });
     }
+  };
+
+  const handleAnalyzeChats = () => {
+    // モックチャット履歴データ（実際の実装では、チャット履歴を取得）
+    const mockChatMessages: ChatMessage[] = [
+      {
+        sender: "character",
+        content: "こんにちは！今日も一日お疲れ様でした。お仕事でのコミュニケーションについて、何か気になることはありましたか？",
+        timestamp: "14:30"
+      },
+      {
+        sender: "user",
+        content: "同僚との会話がうまくいかなくて悩んでいます。自分の意見を伝えるのが苦手で...",
+        timestamp: "14:32"
+      },
+      {
+        sender: "character",
+        content: "そうでしたか。ご自分の気持ちを相手に伝えるのは、とても勇気のいることですよね。どんな場面で特に難しさを感じられますか？",
+        timestamp: "14:35"
+      },
+      {
+        sender: "user",
+        content: "朝の挨拶はできるんですが、それ以上の会話に発展させることが難しいです。会議でも意見を言いたいのですが、なかなか発言できません。",
+        timestamp: "14:37"
+      }
+    ];
+
+    setIsAnalyzingChat(true);
+    aiSuggestionMutation.mutate({
+      messages: mockChatMessages,
+      worryTitle: worry.title,
+      characterName: "さくら先生"
+    });
+  };
+
+  const handleAdoptSuggestion = (suggestion: AITaskSuggestion) => {
+    const task: Task = {
+      id: `task-${Date.now()}`,
+      title: suggestion.title,
+      description: suggestion.description,
+      completed: false,
+      priority: suggestion.priority,
+      createdAt: new Date().toISOString()
+    };
+
+    setTasks(prev => [task, ...prev]);
+    
+    // 採用したタスクを提案から削除
+    setAiSuggestions(prev => prev.filter(s => s.title !== suggestion.title));
+
+    toast({
+      title: "AIタスクを採用しました",
+      description: "タスク一覧に追加されました。"
+    });
   };
 
   const handleAddTask = () => {
@@ -306,10 +405,11 @@ export default function TaskManagementPage({ worryId }: TaskManagementPageProps)
 
         {/* タブナビゲーション */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="tasks" data-testid="tab-tasks">タスク</TabsTrigger>
             <TabsTrigger value="goals" data-testid="tab-goals">目標</TabsTrigger>
             <TabsTrigger value="achievements" data-testid="tab-achievements">達成</TabsTrigger>
+            <TabsTrigger value="ai-suggestions" data-testid="tab-ai-suggestions">AI提案</TabsTrigger>
             <TabsTrigger value="add" data-testid="tab-add">追加</TabsTrigger>
           </TabsList>
 
@@ -420,6 +520,101 @@ export default function TaskManagementPage({ worryId }: TaskManagementPageProps)
                 ))
               )}
             </div>
+          </TabsContent>
+
+          {/* AI提案タブ */}
+          <TabsContent value="ai-suggestions" className="space-y-4">
+            <Card data-testid="card-ai-analysis">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Brain className="w-4 h-4" />
+                  AIタスク提案
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-sm text-muted-foreground">
+                  <p className="mb-3">
+                    これまでのカウンセラーとの会話を分析し、あなたに適したタスクを提案します。
+                    うつ病や不安を抱える方に配慮した、小さく達成しやすいタスクを提案いたします。
+                  </p>
+                </div>
+                <Button
+                  onClick={handleAnalyzeChats}
+                  disabled={isAnalyzingChat || aiSuggestionMutation.isPending}
+                  className="w-full"
+                  data-testid="button-analyze-chats"
+                >
+                  {isAnalyzingChat || aiSuggestionMutation.isPending ? (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+                      分析中...
+                    </>
+                  ) : (
+                    <>
+                      <Brain className="w-4 h-4 mr-2" />
+                      チャット履歴を分析
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {aiSuggestions.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-medium text-sm text-foreground">AIからの提案</h3>
+                {aiSuggestions.map((suggestion, index) => (
+                  <Card key={index} data-testid={`card-ai-suggestion-${index}`}>
+                    <CardContent className="pt-4">
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm text-foreground mb-1">
+                              {suggestion.title}
+                            </h4>
+                            <p className="text-xs text-muted-foreground mb-2">
+                              {suggestion.description}
+                            </p>
+                            <div className="flex items-center gap-2">
+                              <Badge className={`${getPriorityColor(suggestion.priority)} text-xs`}>
+                                {getPriorityText(suggestion.priority)}
+                              </Badge>
+                              <Badge variant="outline" className="text-xs">
+                                {suggestion.category}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-xs text-muted-foreground">
+                            <strong>提案理由:</strong> {suggestion.reasoning}
+                          </p>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => handleAdoptSuggestion(suggestion)}
+                            data-testid={`button-adopt-suggestion-${index}`}
+                          >
+                            <Plus className="w-3 h-3 mr-1" />
+                            採用する
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setAiSuggestions(prev => prev.filter((_, i) => i !== index))}
+                            data-testid={`button-dismiss-suggestion-${index}`}
+                          >
+                            却下
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           {/* 達成記録タブ */}
