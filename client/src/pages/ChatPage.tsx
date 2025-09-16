@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Users } from "lucide-react";
@@ -7,9 +8,10 @@ import ChatInput from "@/components/ChatInput";
 import CharacterSelector from "@/components/CharacterSelector";
 
 export default function ChatPage() {
+  const [, setLocation] = useLocation();
   const [selectedWorryId, setSelectedWorryId] = useState<string>("1");
   const [selectedCharacterId, setSelectedCharacterId] = useState<string>();
-  const [showCharacterSelector, setShowCharacterSelector] = useState(false);
+  const [showCharacterSelector, setShowCharacterSelector] = useState(true);
   const [messages, setMessages] = useState<Array<{
     id: string;
     content: string;
@@ -107,8 +109,8 @@ export default function ChatPage() {
   };
 
   const handleSelectCharacter = (characterId: string) => {
-    setSelectedCharacterId(characterId);
-    setShowCharacterSelector(false);
+    // キャラクター選択後、そのキャラクターのチャットルーム一覧画面に遷移
+    setLocation(`/chat/${characterId}`);
   };
 
   if (showCharacterSelector || !selectedCharacterId) {
