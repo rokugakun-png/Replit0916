@@ -53,7 +53,8 @@ export default function HomePage() {
   );
 
   const handleViewDetails = (id: string) => {
-    console.log('View details for worry:', id);
+    // 振り返るボタンで目標設定画面に遷移
+    setLocation(`/goals/${id}`);
   };
 
   const handleStartChat = (id: string) => {
