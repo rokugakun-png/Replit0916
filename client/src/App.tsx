@@ -11,7 +11,9 @@ import IndividualChatPage from "@/pages/IndividualChatPage";
 import ReportsPage from "@/pages/ReportsPage";
 import GoalSettingPage from "@/pages/GoalSettingPage";
 import TaskManagementPage from "@/pages/TaskManagementPage";
+import SettingsPage from "@/pages/SettingsPage";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import { CharacterProvider } from "@/contexts/CharacterContext";
 
 function Router() {
   const [location] = useLocation();
@@ -43,14 +45,7 @@ function Router() {
         <Route path="/tasks/:worryId">
           {(params) => <TaskManagementPage worryId={params.worryId} />}
         </Route>
-        <Route path="/settings">
-          <div className="min-h-screen bg-background pb-20 flex items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-xl font-bold text-foreground mb-4">設定</h1>
-              <p className="text-muted-foreground">設定画面は開発中です</p>
-            </div>
-          </div>
-        </Route>
+        <Route path="/settings" component={SettingsPage} />
         <Route component={NotFound} />
       </Switch>
       <MobileBottomNav activeTab={getActiveTab()} />
@@ -62,10 +57,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className="min-h-screen bg-background text-foreground font-sans antialiased">
-          <Router />
-        </div>
-        <Toaster />
+        <CharacterProvider>
+          <div className="min-h-screen bg-background text-foreground font-sans antialiased">
+            <Router />
+          </div>
+          <Toaster />
+        </CharacterProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

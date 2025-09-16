@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Send, MoreVertical, Heart } from "lucide-react";
 import { useLocation } from "wouter";
+import { useCharacter } from "@/contexts/CharacterContext";
 
 interface ChatMessage {
   id: string;
@@ -39,13 +40,14 @@ export default function IndividualChatPage({
 }: IndividualChatPageProps) {
   const [newMessage, setNewMessage] = useState("");
   const [, setLocation] = useLocation();
+  const { character: characterSettings } = useCharacter();
 
-  // モックデータ
+  // キャラクターデータ（設定から動的に取得）
   const characters: Record<string, Character> = {
     sakura: {
       id: "sakura",
-      name: "さくら先生",
-      title: "心理カウンセラー",
+      name: characterSettings.name,
+      title: characterSettings.title,
       avatar: ""
     },
     doctor: {

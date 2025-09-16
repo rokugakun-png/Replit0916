@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, MessageSquare, Clock, Heart, Sparkles } from "lucide-react";
 import { useLocation } from "wouter";
+import { useCharacter } from "@/contexts/CharacterContext";
 
 interface ChatRoom {
   id: string;
@@ -33,12 +34,13 @@ interface CharacterRoomsPageProps {
 
 export default function CharacterRoomsPage({ characterId = "sakura" }: CharacterRoomsPageProps) {
   const [, setLocation] = useLocation();
+  const { character: characterSettings } = useCharacter();
   
-  // モックデータ
+  // キャラクターデータ（設定から動的に取得）
   const character: Character = {
     id: "sakura",
-    name: "さくら先生",
-    title: "心理カウンセラー",
+    name: characterSettings.name,
+    title: characterSettings.title,
     avatar: "",
     description: "臨床心理士として10年の経験。あなたの気持ちにそっと寄り添います。",
     todayMessage: "今日は暖かい一日ですね。心も軽やかに過ごしていただけたらと思います。何か気になることがあれば、いつでもお話しくださいね。",

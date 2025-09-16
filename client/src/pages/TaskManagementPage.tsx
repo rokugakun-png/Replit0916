@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Target, Plus, CheckCircle, Calendar, Star, Brain, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useCharacter } from "@/contexts/CharacterContext";
 
 interface Task {
   id: string;
@@ -59,6 +60,7 @@ interface TaskManagementPageProps {
 export default function TaskManagementPage({ worryId }: TaskManagementPageProps) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { character: characterSettings } = useCharacter();
   const [activeTab, setActiveTab] = useState("tasks");
   
   // 新しいタスク追加フォーム
@@ -232,7 +234,7 @@ export default function TaskManagementPage({ worryId }: TaskManagementPageProps)
     aiSuggestionMutation.mutate({
       messages: mockChatMessages,
       worryTitle: worry.title,
-      characterName: "さくら先生"
+      characterName: characterSettings.name
     });
   };
 
