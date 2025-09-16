@@ -10,6 +10,7 @@ import CharacterRoomsPage from "@/pages/CharacterRoomsPage";
 import IndividualChatPage from "@/pages/IndividualChatPage";
 import ReportsPage from "@/pages/ReportsPage";
 import GoalSettingPage from "@/pages/GoalSettingPage";
+import TaskManagementPage from "@/pages/TaskManagementPage";
 import MobileBottomNav from "@/components/MobileBottomNav";
 
 function Router() {
@@ -38,6 +39,9 @@ function Router() {
         <Route path="/reports" component={ReportsPage} />
         <Route path="/goals/:worryId">
           {(params) => <GoalSettingPage worryId={params.worryId} />}
+        </Route>
+        <Route path="/tasks/:worryId">
+          {(params) => <TaskManagementPage worryId={params.worryId} />}
         </Route>
         <Route path="/settings">
           <div className="min-h-screen bg-background pb-20 flex items-center justify-center">
