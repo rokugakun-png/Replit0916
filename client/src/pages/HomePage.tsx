@@ -62,6 +62,11 @@ export default function HomePage() {
     setLocation(`/chat/sakura/${id}`);
   };
 
+  const handleManageTasks = (id: string) => {
+    // タスク管理画面に遷移
+    setLocation(`/tasks/${id}`);
+  };
+
   const handleAddWorry = () => {
     console.log('Add new worry');
   };
@@ -165,6 +170,7 @@ export default function HomePage() {
                 worry={worry}
                 onViewDetails={handleViewDetails}
                 onStartChat={handleStartChat}
+                onManageTasks={handleManageTasks}
               />
             ))
           )}

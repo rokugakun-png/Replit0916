@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Heart, MessageSquare, Target, CheckSquare } from "lucide-react";
+import { Heart, MessageSquare, Target, CheckSquare, ClipboardList } from "lucide-react";
 
 interface WorryCardProps {
   worry: {
@@ -18,9 +18,10 @@ interface WorryCardProps {
   };
   onViewDetails: (id: string) => void;
   onStartChat: (id: string) => void;
+  onManageTasks: (id: string) => void;
 }
 
-export default function WorryCard({ worry, onViewDetails, onStartChat }: WorryCardProps) {
+export default function WorryCard({ worry, onViewDetails, onStartChat, onManageTasks }: WorryCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
@@ -114,25 +115,37 @@ export default function WorryCard({ worry, onViewDetails, onStartChat }: WorryCa
         )}
 
         {/* 寄り添いのアクション */}
-        <div className="flex gap-2 pt-2">
+        <div className="space-y-2 pt-2">
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex-1"
+              onClick={() => onViewDetails(worry.id)}
+              data-testid={`button-view-details-${worry.id}`}
+            >
+              <Heart className="w-4 h-4 mr-2" />
+              振り返る
+            </Button>
+            <Button 
+              size="sm" 
+              className="flex-1"
+              onClick={() => onStartChat(worry.id)}
+              data-testid={`button-start-chat-${worry.id}`}
+            >
+              <MessageSquare className="w-4 h-4 mr-2" />
+              お話しする
+            </Button>
+          </div>
           <Button 
-            variant="outline" 
+            variant="secondary" 
             size="sm" 
-            className="flex-1"
-            onClick={() => onViewDetails(worry.id)}
-            data-testid={`button-view-details-${worry.id}`}
+            className="w-full"
+            onClick={() => onManageTasks(worry.id)}
+            data-testid={`button-manage-tasks-${worry.id}`}
           >
-            <Heart className="w-4 h-4 mr-2" />
-            振り返る
-          </Button>
-          <Button 
-            size="sm" 
-            className="flex-1"
-            onClick={() => onStartChat(worry.id)}
-            data-testid={`button-start-chat-${worry.id}`}
-          >
-            <MessageSquare className="w-4 h-4 mr-2" />
-            お話しする
+            <ClipboardList className="w-4 h-4 mr-2" />
+            タスク管理
           </Button>
         </div>
       </CardContent>

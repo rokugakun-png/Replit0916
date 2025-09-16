@@ -59,11 +59,7 @@ export default function GoalSettingPage({ worryId }: GoalSettingPageProps) {
   };
 
   const handleGoToTaskManagement = () => {
-    // TODO: タスク管理画面が実装されたら有効化
-    toast({
-      title: "タスク管理画面は準備中です",
-      description: "まもなく利用できるようになります。"
-    });
+    setLocation(`/tasks/${worryId}`);
   };
 
   return (
@@ -172,6 +168,26 @@ export default function GoalSettingPage({ worryId }: GoalSettingPageProps) {
                 目標を設定する
               </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* タスク管理画面への遷移 */}
+        <Card data-testid="card-task-management">
+          <CardHeader>
+            <CardTitle className="text-base">タスク管理</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              設定した目標に向けて具体的なタスクを管理し、AI提案を受けることができます。
+            </p>
+            <Button 
+              onClick={handleGoToTaskManagement}
+              className="w-full"
+              data-testid="button-go-to-tasks"
+            >
+              <Target className="w-4 h-4 mr-2" />
+              タスク管理へ進む
+            </Button>
           </CardContent>
         </Card>
 
