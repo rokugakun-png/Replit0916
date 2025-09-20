@@ -100,7 +100,21 @@ export class MemStorage implements IStorage {
   }
 
   async updateCharacterSettings(settings: CharacterSettings): Promise<void> {
-    this.characterSettings = { ...this.characterSettings, ...settings };
+    for (const [characterId, updates] of Object.entries(settings)) {
+      const existingEntry = this.characterSettings[characterId];
+      const mergedCustomizations = {
+        ...(existingEntry?.customizations ?? {}),
+        ...(updates.customizations ?? {}),
+      };
+
+      this.characterSettings[characterId] = {
+        ...(existingEntry ?? {}),
+        ...updates,
+        ...(Object.keys(mergedCustomizations).length > 0
+          ? { customizations: mergedCustomizations }
+          : {}),
+      };
+    }
   }
 }
 
