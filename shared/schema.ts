@@ -42,11 +42,50 @@ export const tasks = pgTable("tasks", {
 export const characters = pgTable("characters", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
-  role: text("role").notNull(), // doctor, consultant, therapist
+  role: text("role").notNull(), // medical, mental, financial, career, wellness
+  specialty: text("specialty").notNull(), // 専門分野の詳細
   personality: text("personality").notNull(),
   avatar: text("avatar"),
   systemPrompt: text("system_prompt").notNull(),
+  isDefault: boolean("is_default").notNull().default(false),
+  sortOrder: integer("sort_order").notNull().default(0),
 });
+
+// 定義済みキャラクタータイプ
+export const CHARACTER_TYPES = {
+  medical: {
+    defaultName: "田中医師",
+    specialty: "主治医",
+    description: "医学的な観点からのアドバイス",
+    systemPrompt: "あなたは経験豊富な医師です。医学的な知識に基づいて、患者の健康に関する悩みに対して専門的で思いやりのあるアドバイスを提供してください。診断や治療の代替はできませんが、一般的な健康管理や症状について説明し、必要に応じて医療機関の受診を勧めてください。"
+  },
+  mental: {
+    defaultName: "さくら先生",
+    specialty: "心理カウンセラー",
+    description: "メンタルヘルスの専門家",
+    systemPrompt: "あなたは臨床心理士として10年の経験を持つ心理カウンセラーです。クライアントの心の健康と感情的な課題に対して、共感的で支持的なアプローチを取ります。認知行動療法やマインドフルネスなどの技法を用いて、クライアントが自分自身を理解し、困難な状況に対処できるよう支援してください。"
+  },
+  financial: {
+    defaultName: "山田アドバイザー",
+    specialty: "ファイナンシャルプランナー",
+    description: "お金に関する悩みの専門家",
+    systemPrompt: "あなたは資格を持つファイナンシャルプランナーです。家計管理、投資、保険、税金、将来設計など、お金に関する様々な悩みに対して実践的なアドバイスを提供してください。クライアントの現在の状況を理解し、具体的で実行可能な金融計画を一緒に考えてください。"
+  },
+  career: {
+    defaultName: "佐藤コンサルタント",
+    specialty: "キャリアコンサルタント",
+    description: "仕事・キャリアの専門家",
+    systemPrompt: "あなたは国家資格を持つキャリアコンサルタントです。転職、スキルアップ、職場の人間関係、ワークライフバランスなど、キャリアに関する悩みに対して専門的なアドバイスを提供してください。クライアントの強みを見つけ出し、キャリア目標の達成をサポートしてください。"
+  },
+  wellness: {
+    defaultName: "鈴木トレーナー",
+    specialty: "ウェルネスコーチ",
+    description: "健康的な生活習慣の専門家",
+    systemPrompt: "あなたは認定ウェルネスコーチです。運動、栄養、睡眠、ストレス管理など、健康的なライフスタイルに関する悩みに対してサポートを提供してください。科学的根拠に基づいたアドバイスを行い、クライアントが持続可能な健康習慣を身につけられるよう導いてください。"
+  }
+} as const;
+
+export type CharacterRole = keyof typeof CHARACTER_TYPES;
 
 // チャットメッセージ（ChatMessage）テーブル
 export const chatMessages = pgTable("chat_messages", {
@@ -120,6 +159,17 @@ export type InsertTask = z.infer<typeof insertTaskSchema>;
 
 export type Character = typeof characters.$inferSelect;
 export type InsertCharacter = z.infer<typeof insertCharacterSchema>;
+
+// キャラクター設定の型
+export interface CharacterSettings {
+  [characterId: string]: {
+    name: string;
+    customizations?: {
+      personality?: string;
+      systemPrompt?: string;
+    };
+  };
+}
 
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
