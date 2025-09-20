@@ -13,7 +13,7 @@ import GoalSettingPage from "@/pages/GoalSettingPage";
 import TaskManagementPage from "@/pages/TaskManagementPage";
 import SettingsPage from "@/pages/SettingsPage";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import { CharacterProvider } from "@/contexts/CharacterContext";
+import { CharactersProvider } from "@/contexts/CharactersContext";
 
 function Router() {
   const [location] = useLocation();
@@ -57,12 +57,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <CharacterProvider>
+        <CharactersProvider>
           <div className="min-h-screen bg-background text-foreground font-sans antialiased">
             <Router />
           </div>
           <Toaster />
-        </CharacterProvider>
+        </CharactersProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
